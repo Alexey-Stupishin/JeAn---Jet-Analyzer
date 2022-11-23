@@ -1,5 +1,7 @@
 # JeAn - Jet Analyzer
 
+See [Licence](https://github.com/Alexey-Stupishin/JeAn---Jet-Analyzer/blob/main/LICENSE)
+
 Downloads AIA/data from JSOC, find jet-like occurencies and prepares a movie.
 
 ## Dependencies
