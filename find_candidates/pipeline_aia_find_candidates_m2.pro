@@ -8,22 +8,6 @@ run_diff = rd_proc
 
 szd = size(data)
 nd = szd[3]
-;flux = dblarr(nd)
-;for i = 0, nd-1 do begin
-;    flux[i] = total(data[*, *, i])
-;endfor
-;save, filename = "s:\University\Work\11312_for_2022\flux171.sav", flux
-
-data = float(data)
-save, filename = "s:\University\Work\12835\AIA\data171.sav", data
-
-;frame = fltarr(szd[1], szd[2])
-;sframe = {frame:frame}
-;ssframe = replicate(sframe, nd)
-;for i = 0, nd-1 do begin
-;    ssframe[i].frame = float(data[*, *, i])
-;endfor
-;save, filename = "s:\University\Work\12835\AIA\data171.sav", ssframe
 
 if keyword_set(no_cand) then return, 0
 

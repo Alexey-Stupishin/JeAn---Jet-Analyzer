@@ -1,9 +1,8 @@
-; Main entry to Jet Analyzer
-
-function pipeline_aia_all, config_file = config_file, work_dir = work_dir, cache_dir = cache_dir, presets_file = presets_file $
+function pipeline_aia_all, config_file, work_dir $
                     , fps = fps, no_load = no_load, no_cut = no_cut $
                     , no_save_empty = no_save_empty, no_visual = no_visual, no_cand = no_cand, no_details = no_details $
-                    , remote_cutout = remote_cutout, ref_images = ref_images $
+                    , presets_file = presets_file, ref_images = ref_images $
+                    , remote_cutout = remote_cutout, cache_dir = cache_dir $
                     , method = method, graphtype = graphtype, maxtime = maxtime, waves = waves $
                     , warc = warc, harc = harc, use_jpg = use_jpg, use_contour = use_contour $
                     , test = test 
@@ -61,11 +60,6 @@ foreach wave, config.waves, i do begin
     cand_report.Add, {wave:wave, ncand:ncand}
     if ~keyword_set(no_visual) then begin   
         t0 = systime(/seconds)
-;        pipeline_aia_movie_prep_pict, work_dir, obj_dir, wave, aia_dir_wave_sel[i], vis_data_dir_wave[i], details, config, files_in.ToArray() $
-;                                    , use_jpg = use_jpg, use_contour = use_contour, no_save_empty = no_save_empty, graphtype = graphtype, no_details = no_details $
-;                                    , run_diff = run_diff, data_full = data, ind_seq = ind_seq
-;        message, '******** PICTURES prepared in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
-;        pipeline_aia_make_movie, wave, vis_data_dir_wave[i], vis_data_dir, details, work_dir, config, use_jpg = use_jpg, fps = fps
         pipeline_aia_movie_prep_pict_movie, work_dir, obj_dir, vis_data_dir, wave, aia_dir_wave_sel[i], vis_data_dir_wave[i], details, config, presets, files_in.ToArray() $
                                     , use_jpg = use_jpg, use_contour = use_contour, no_save_empty = no_save_empty, graphtype = graphtype, no_details = no_details $
                                     , run_diff = run_diff, data_full = data, ind_seq = ind_seq, fps = fps
