@@ -2,9 +2,9 @@
 
 See [Licence](https://github.com/Alexey-Stupishin/JeAn---Jet-Analyzer/blob/main/LICENSE)
 
-[![DOI](https://zenodo.org/badge/569744299.svg)](https://zenodo.org/badge/latestdoi/569744299)
-[xxx](https://zenodo.org/badge/latestdoi/263352044)
-
+<!--- [![DOI](https://zenodo.org/badge/569744299.svg)](https://zenodo.org/badge/latestdoi/569744299) --->
+[![DOI](https://zenodo.org/badge/7362757.svg)](https://zenodo.org/record/7362757)
+<!--- [doi:10.5281/zenodo.7362757](https://zenodo.org/record/7362757) --->
 
 Downloads AIA/data from JSOC, find jet-like occurencies and prepares a movie.
 
