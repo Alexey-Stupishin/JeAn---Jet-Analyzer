@@ -1,7 +1,7 @@
 ;
 ; Main entry for JeAn - Jet Analyzer
 ;   
-; v 3.1.22.1124 (rev.660)
+; v 3.1.22.1125 (rev.662)
 ; 
 ; Call (see parameters and comments below):
 ; rc = pipeline_aia(config_file, work_dir $
@@ -19,7 +19,7 @@
 ; Parameters optional (in):
 ;   (in)      no_visual      (integer)      flag to ignore creating joint images of intensity and 
 ;                                             running difference and the creation of video files (default not set)     
-;   (in)      no_cand        (integer)      flag to ignore serching jet-like candidates (default not set)
+;   (in)      no_cand        (integer)      flag to ignore searching jet-like candidates (default not set)
 ;                                             (use both keys /no_visual,/no_cand to fits downloading only) 
 ;   (in)      no_details     (integer)      flag to ignore creating individual details movies (default not set)
 ;   (in)      fps            (integer)      frames per second for movies (default = 5)
