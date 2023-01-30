@@ -83,7 +83,7 @@ for f = mi, ma do begin
             xs0 = x 
             ys0 = y
         endif else begin
-            features.from_start_speed = max([features.from_start_speed, pipeline_aia_irc_get_aspects_clusters_get_speed(prevx, prevy, x, y, f - mi)])
+            features.from_start_speed = max([features.from_start_speed, pipeline_aia_irc_get_aspects_clusters_get_speed(xs0, ys0, x, y, f - mi)])
         endelse
         
         prevx = x
