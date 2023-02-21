@@ -3,7 +3,7 @@ pro pipeline_aia_read_presets, presets, presets_file = presets_file
 pipeline_aia_read_presets_m0, presets0, presets_file = presets_file 
 
 presets = { $
-           MEDIAN_LIM:0.1d $
+           MEDIAN_LIM:0.3d $
          , AIA_MEDIAN:5 $
          , MASK_THRESHOLD:3.3d $
          , STD_MEDIAN:7 $
