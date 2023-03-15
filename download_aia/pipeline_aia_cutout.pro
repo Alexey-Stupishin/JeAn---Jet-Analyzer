@@ -87,7 +87,7 @@ end
 pro pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel, config, nofits = nofits, sav = sav
     t0 = systime(/seconds)
    
-    pipeline_aia_get_query, wave, config.tstart, config.tstop, urls, filenames
+    aia_download_get_query, wave, config.tstart, config.tstop, urls, filenames
 
     n_files = n_elements(filenames)
     

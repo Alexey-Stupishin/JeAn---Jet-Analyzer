@@ -10,8 +10,9 @@ Please read [Tutorial](https://github.com/Alexey-Stupishin/JeAn---Jet-Analyzer/b
 
 ## Dependencies
 * Some routines are required [Solar Soft](https://www.lmsal.com/solarsoft/ssw_packages_info.html) environment installed.
-* Requires [common utilites](https://github.com/Alexey-Stupishin/AS-IDL-Library).
+* Requires [AS common utilites](https://github.com/Alexey-Stupishin/AS-IDL-Library).
 
 ## Update History
 * 23 Nov 2022: Create from previous repository
 * 25 Nov 2022: Release v.3.1.22.1125 (rev.662)
+* 15 Mar 2023: AIA download refactoring

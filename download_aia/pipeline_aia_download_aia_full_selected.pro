@@ -19,7 +19,7 @@ for k = 0, n_elements(tt)-1 do begin
     conft.tstart = asu_julday2str(tm)
     tp = asu_julday_mod(t, secs = delt)
     conft.tstop = asu_julday2str(tp)
-    pipeline_aia_download_aia_full, wave, aia_dir_add, conft, dirmode = 'direct'
+    aia_download_by_config, wave, aia_dir_add, conft, dirmode = 'direct'
 end
 
 end
