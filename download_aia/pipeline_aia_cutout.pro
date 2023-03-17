@@ -99,7 +99,7 @@ pro pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel, config
     foreach filename, filenames, j do begin
         file_out =  files_out[j]
         if file_test(file_out) then continue
-        date = aia_date_from_filename(filename)
+        date = asu_date_from_filename(filename)
         wave_dir = aia_dir_cache + path_sep() + date + path_sep() + strcompress(wave, /remove_all)
         file_in = wave_dir + path_sep() + filename
         pipeline_aia_fits_cutout, file_in, file_out, config, nofits = nofits, sav = sav

@@ -1,6 +1,7 @@
 function pipeline_aia_all, config_file, work_dir $
                     , fps = fps, no_load = no_load, no_cut = no_cut $
-                    , no_save_empty = no_save_empty, no_visual = no_visual, no_cand = no_cand, no_details = no_details $
+                    , no_save_empty = no_save_empty $
+                    , no_visual = no_visual, no_vis_hmi = no_vis_hmi, no_cand = no_cand, no_details = no_details $
                     , presets_file = presets_file, ref_images = ref_images $
                     , remote_cutout = remote_cutout, cache_dir = cache_dir $
                     , method = method, graphtype = graphtype, maxtime = maxtime, waves = waves $
@@ -18,7 +19,8 @@ if n_elements(no_cand) eq 0 then no_cand = 0
 pipeline_aia_read_presets, presets, presets_file = presets_file 
 pipeline_aia_read_down_config, config, method, config_file = config_file, waves = waves, warc = warc, harc = harc 
 if not keyword_set(work_dir) then cd, current = work_dir
-pipeline_aia_dir_tree, work_dir, config, aia_dir_cache, event_rel, aia_dir_wave_sel, obj_dir, vis_data_dir, vis_data_dir_wave $
+pipeline_aia_dir_tree, work_dir, config, aia_dir_cache, event_rel, aia_dir_wave_sel, hmi_dir_wave_sel, obj_dir $
+                     , vis_data_dir, vis_data_dir_wave, hmi_vis_data_dir_wave $
                      , cache_dir = cache_dir, method = method, test = test, remote_cutout = remote_cutout
 
 message, '********************************************************************', /info
@@ -45,13 +47,13 @@ foreach wave, config.waves, i do begin
                 file_mkdir, save_dir_full
                 pipeline_aia_download_aia_full_selected, wave, save_dir_full, config
             endif
-            lims = pipeline_aia_download_aia_cutout(wave, save_dir, config)
+            lims = aia_utils_download_cutout(wave, save_dir, config)
         endif
     endif else begin
       if ~keyword_set(no_load) then aia_download_by_config, wave, aia_dir_cache, config, dirmode = 'cache'
       if ~keyword_set(no_cut) then pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel[i], config, nofits = nofits, sav = sav
     endelse
-    message, '******** DOWNLOAD/CUTOFF performed in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
+    message, '******** AIA DOWNLOAD/CUTOFF performed in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
     case method of
         0: ncand = pipeline_aia_find_candidates_m0(work_dir, aia_dir_wave_sel[i], wave, obj_dir, config, files_in, presets)
         1: ncand = pipeline_aia_find_candidates(work_dir, aia_dir_wave_sel[i], wave, obj_dir, config, files_in, presets)
@@ -63,7 +65,24 @@ foreach wave, config.waves, i do begin
         pipeline_aia_movie_prep_pict_movie, work_dir, obj_dir, vis_data_dir, wave, aia_dir_wave_sel[i], vis_data_dir_wave[i], details, config, presets, files_in.ToArray() $
                                     , use_jpg = use_jpg, use_contour = use_contour, no_save_empty = no_save_empty, graphtype = graphtype, no_details = no_details $
                                     , run_diff = run_diff, data_full = data, ind_seq = ind_seq, fps = fps
-        message, '******** PICTURES/VIDEO prepared in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
+        message, '******** AIA PICTURES/VIDEO prepared in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
+    endif
+endforeach
+
+config.wpix = config.whmi
+config.hpix = config.hhmi
+foreach mag, config.mag, i do begin
+    t0 = systime(/seconds)
+    if ~keyword_set(no_load) then begin
+        save_dir = work_dir + path_sep() + hmi_dir_wave_sel[i]
+        lims = hmi_utils_download_cutout(mag, save_dir, config)
+    endif
+    message, '******** HMI DOWNLOAD/CUTOFF performed in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
+    
+    if ~keyword_set(no_vis_hmi) then begin   
+        t0 = systime(/seconds)
+        pipeline_aia_movie_hmi, work_dir, obj_dir, vis_data_dir, mag, hmi_dir_wave_sel[i], hmi_vis_data_dir_wave[i], config, fps = fps
+        message, '******** HMI PICTURES/VIDEO prepared in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
     endif
 endforeach
 

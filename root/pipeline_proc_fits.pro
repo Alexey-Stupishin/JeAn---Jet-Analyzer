@@ -40,7 +40,7 @@ foreach wave, config.waves, i do begin
                 file_mkdir, save_dir_full
                 pipeline_aia_download_aia_full_selected, wave, save_dir_full, config
             endif
-            lims = pipeline_aia_download_aia_cutout(wave, save_dir, config)
+            lims = aia_utils_download_cutout(wave, save_dir, config)
         endif
     endif else begin
       if ~keyword_set(no_load) then aia_download_by_config, wave, aia_dir_cache, config, dirmode = 'cache'

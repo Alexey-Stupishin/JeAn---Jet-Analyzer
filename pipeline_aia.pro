@@ -17,11 +17,12 @@
 ;   (in)      work_dir       (string)       path to the directory for output files (see Tutorial)
 ;   
 ; Parameters optional (in):
-;   (in)      no_visual      (integer)      flag to ignore creating joint images of intensity and 
+;   (in)      no_visual      (integer)      flag to ignore creating joint aia images of intensity and 
 ;                                             running difference and the creation of video files (default not set)     
 ;   (in)      no_cand        (integer)      flag to ignore searching jet-like candidates (default not set)
 ;                                             (use both keys /no_visual,/no_cand to fits downloading only) 
 ;   (in)      no_details     (integer)      flag to ignore creating individual details movies (default not set)
+;   (in)      no_vis_hmi     (integer)      flag to ignore creating him (like no_visual flag) 
 ;   (in)      fps            (integer)      frames per second for movies (default = 5)
 ;   (in)      presets_file   (string)       path to presets file (see Tutorial)
 ;   (in)      ref_images     (integer)      flag to save images for full disk for the beginning, middle and end of event.
@@ -36,7 +37,7 @@
 ;
 ; Tutorial can be found in the root of the package.
 ;    
-; (c) Alexey G. Stupishin, Saint Petersburg State University, Saint Petersburg, Russia, 2020-2022
+; (c) Alexey G. Stupishin, Saint Petersburg State University, Saint Petersburg, Russia, 2020-2023
 ;     mailto:agstup@yandex.ru
 ;
 ;--------------------------------------------------------------------------;
@@ -48,12 +49,14 @@
 function pipeline_aia, config_file, work_dir $
                     , no_visual = no_visual, no_cand = no_cand, no_details = no_details $
                     , fps = fps $
-                    , presets_file = presets_file, ref_images = ref_images
+                    , presets_file = presets_file, ref_images = ref_images $
+                    , _extra = _extra
 
 return, pipeline_aia_all(config_file, work_dir $
                        , no_visual = no_visual, no_cand = no_cand, no_details = no_details $
                        , fps = fps $
                        , presets_file = presets_file, ref_images = ref_images $
+                       , _extra = _extra $
                         )
 
 end

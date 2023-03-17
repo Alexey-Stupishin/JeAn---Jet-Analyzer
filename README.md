@@ -16,3 +16,4 @@ Please read [Tutorial](https://github.com/Alexey-Stupishin/JeAn---Jet-Analyzer/b
 * 23 Nov 2022: Create from previous repository
 * 25 Nov 2022: Release v.3.1.22.1125 (rev.662)
 * 15 Mar 2023: AIA download refactoring
+* 15 Mar 2023: Introducing HMI download functionality, AIA refactoring
