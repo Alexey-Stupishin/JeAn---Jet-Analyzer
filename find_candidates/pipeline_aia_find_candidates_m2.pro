@@ -1,8 +1,9 @@
-function pipeline_aia_find_candidates_m2, work_dir, aia_dir_wave_sel, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand
+function pipeline_aia_find_candidates_m2, work_dir, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand
 
 t0 = systime(/seconds)
 
-pipeline_aia_get_input_files, config, work_dir + path_sep() + aia_dir_wave_sel, files_in
+if files_in.Count() eq 0 then return, 0
+
 pipeline_aia_read_prepare_data, files_in.ToArray(), rd_proc, data, ind_seq, presets
 run_diff = rd_proc
 

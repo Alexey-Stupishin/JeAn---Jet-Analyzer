@@ -11,6 +11,7 @@ def_aia_size = 500
 def_hmi_size = fix(def_aia_size*arcppix_aia/arcppix_hmi)
 config = {tstart:config_data["TIME_START"], tstop:config_data["TIME_STOP"], tref:config_data["TIME_START"] $
         , xc:config_data["X_CENTER"], yc:config_data["Y_CENTER"] $
+        , cadence:'' $
         , wpix:def_aia_size, hpix:def_aia_size $
         , whmi:def_hmi_size, hhmi:def_hmi_size $
         , waves:list() $
@@ -26,6 +27,8 @@ if n_elements(waves) ne 0 then begin
 endif
 
 config.mag = asu_get_safe_json_key(config_data, "MAG", list())
+
+config.cadence = asu_get_safe_json_key(config_data, "CADENCE", '')
 
 config.wpix = asu_get_safe_json_key(config_data, "WIDTH_PIX", config.wpix)
 config.wpix = round(asu_get_safe_json_key(config_data, "WIDTH_ARC", round(config.wpix*arcppix_aia))/arcppix_aia)

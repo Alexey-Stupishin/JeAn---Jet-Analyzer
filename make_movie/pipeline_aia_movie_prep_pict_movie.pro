@@ -1,13 +1,3 @@
-pro l_pipeline_aia_movie_get_pict_scale, x, y, ind, xstep, xshift, ystep, yshift
-
-xstep = ind.CDELT1
-ystep = ind.CDELT2
- 
-xshift = (x - ind.CRPIX1)*ind.CDELT1 + ind.CRVAL1 
-yshift = (y - ind.CRPIX2)*ind.CDELT2 + ind.CRVAL2 
-
-end
-
 pro pipeline_aia_movie_prep_pict_movie, work_dir, obj_dir, vis_data_dir, wave, aia_dir_wave_sel, vis_data_dir_wave, details, config, presets, files_in $
                                 , use_jpg = use_jpg, use_contour = use_contour, no_save_empty = no_save_empty, graphtype = graphtype, no_details = no_details $
                                 , run_diff = run_diff, data_full = data_full, ind_seq = ind_seq, fps = fps
@@ -40,8 +30,6 @@ endif else begin
         if keyword_set(no_save_empty) then return
     endif
 endelse
-
-l_pipeline_aia_movie_get_pict_scale, 0, 0, ind_seq[0], xstep, xshift, ystep, yshift
 
 if n_elements(run_diff) eq 0 || n_elements(data_full) eq 0 || n_elements(ind_seq) eq 0 then begin
     pipeline_aia_read_prepare_data, files_in, run_diff, data_full, ind_seq, presets
@@ -103,6 +91,9 @@ foreach file_in, files_in[0:szrd[3]-1], i do begin
         message, 'Preparing movie , ' + strcompress(ctrl,/remove_all) + '%',/info
         ctrl += 5 
     endif
+    asu_fits_pixels2arcsec_x, 0, index, xshift, step = xstep
+    asu_fits_pixels2arcsec_y, 0, index, yshift, step = ystep
+    
     outfile =  work_dir + path_sep() + vis_data_dir_wave + path_sep() + prefix + "_aia" + string(i, FORMAT = '(I05)') + extns
     if graphtype eq 0 then begin
         win.Erase
@@ -164,7 +155,9 @@ for k = 0, n_elements(found_candidates)-1 do begin
     ybox[0] = max([0, ybox[0]-yexpand])  
     ybox[1] = min([ind_seq[0].naxis2-1, ybox[1]+yexpand])  
     
-    l_pipeline_aia_movie_get_pict_scale, xbox[0], ybox[0], ind_seq[0], xstep, xshift, ystep, yshift
+    ; l_pipeline_aia_movie_get_pict_scale, xbox[0], ybox[0], ind_seq[0], xstep, xshift, ystep, yshift
+    asu_fits_pixels2arcsec_x, xbox[0], ind_seq[0], xshift, step = xstep
+    asu_fits_pixels2arcsec_y, ybox[0], ind_seq[0], yshift, step = ystep
     from = max([0, frames[0].pos-frames_prev])
     to = min([frames[nc-1].pos+frames_post, n_elements(files_in)-3])
     data_prev = !NULL

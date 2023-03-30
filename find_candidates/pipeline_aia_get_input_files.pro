@@ -10,8 +10,4 @@ foreach file_in, files_in_all, i do begin
     if tf ge ts && tf le te then files_in.Add, file_in
 endforeach
 
-if files_in.Count() lt 2 then begin
-    message, "No fits found, check config and input keys."
-endif
-
 end
