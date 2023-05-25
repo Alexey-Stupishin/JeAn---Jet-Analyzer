@@ -60,16 +60,19 @@ endfor
 mm = minmax(meds)
 message, '* med/min = ' + asu_compstr(mmeds/mm[0]) + ', max/med = ' + asu_compstr(mm[1]/mmeds), /info
 
-clust = label_region(meds/mmeds lt dmin or mmeds/meds gt dmax, /all_neighbors, /ulong)
-for c = 1, max(clust) do begin
-    idxs = where(clust eq c)
-    n_el = n_elements(idxs)
-    from = idxs[0] eq 0 ? idxs[n_el-1]+1 : idxs[0]-1  
-    to = idxs[n_el-1] eq n_elements(meds)-1 ? idxs[0]-1 : idxs[n_el-1]+1
-    for pos = from+1, to-1 do begin
-        data_full[*,*,pos] = data_full[*,*,from] + (data_full[*,*,to]-data_full[*,*,from])*double(pos-from)/double(n_el+1)
-    endfor  
-endfor
+idx = where(meds/mmeds lt dmin or mmeds/meds gt dmax, count)
+if count gt 0 then begin
+    clust = label_region(meds/mmeds lt dmin or mmeds/meds gt dmax, /all_neighbors, /ulong)
+    for c = 1, max(clust) do begin
+        idxs = where(clust eq c)
+        n_el = n_elements(idxs)
+        from = idxs[0] eq 0 ? idxs[n_el-1]+1 : idxs[0]-1  
+        to = idxs[n_el-1] eq n_elements(meds)-1 ? idxs[0]-1 : idxs[n_el-1]+1
+        for pos = from+1, to-1 do begin
+            data_full[*,*,pos] = data_full[*,*,from] + (data_full[*,*,to]-data_full[*,*,from])*double(pos-from)/double(n_el+1)
+        endfor  
+    endfor
+endif
 
 ;meds2 = dblarr(n_files)
 ;for i = 0, n_files-1 do begin

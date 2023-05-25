@@ -59,6 +59,7 @@ endelse
 ctrl =0.
 n_files = n_elements(files_in)
 szrd = size(run_diff)
+if szrd[0] eq 2 then szrd[3] = 1
 foreach file_in, files_in[0:szrd[3]-1], i do begin
     rtitle = ''
 
