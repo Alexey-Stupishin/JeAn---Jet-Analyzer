@@ -4,7 +4,6 @@ extns = '.png'
 if n_elements(use_jpg) ne 0 && use_jpg then extns = '.jpg'
 if n_elements(instrument) eq 0 then instrument = 'aia'
 
-inst_mask = from_dir + path_sep() + prefix + '_' + instrument + '%05d' + extns
-asu_make_movie_by_frames, inst_mask, to_filename, fps = fps
+asu_make_movie_by_pattern, prefix + '_' + instrument, from_dir, to_filename, fps = fps, postfix = extns
 
 end
