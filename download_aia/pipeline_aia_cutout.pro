@@ -84,10 +84,11 @@ end
 ;end
 
 
-pro pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel, config, nofits = nofits, sav = sav
+function pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel, config, nofits = nofits, sav = sav
     t0 = systime(/seconds)
    
-    aia_download_get_query, wave, config.tstart, config.tstop, urls, filenames
+    code = aia_download_get_query(wave, config.tstart, config.tstop, urls, filenames)
+    if code lt 0 then return, code
 
     n_files = n_elements(filenames)
     
@@ -112,4 +113,6 @@ pro pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel, config
   
 ;    message, strcompress(string(systime(/seconds)-t0,format="('cutoff performed in ',g0,' seconds')")), /cont
     message, 'cutoff performed in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /cont
+    
+    return, code
 end

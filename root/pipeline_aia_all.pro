@@ -53,8 +53,14 @@ foreach wave, config.waves, i do begin
             lims = aia_utils_download_cutout(wave, save_dir, config)
         endif
     endif else begin
-      if ~keyword_set(no_load) then aia_download_by_config, wave, aia_dir_cache, config, dirmode = 'cache'
-      if ~keyword_set(no_cut) then pipeline_aia_cutout, aia_dir_cache, work_dir, wave, aia_dir_wave_sel[i], config, nofits = nofits, sav = sav
+        if ~keyword_set(no_load) then begin
+            code = aia_download_by_config(wave, aia_dir_cache, config, dirmode = 'cache')
+            if code lt 0 then continue
+        endif
+        if ~keyword_set(no_cut) then begin
+            code = pipeline_aia_cutout(aia_dir_cache, work_dir, wave, aia_dir_wave_sel[i], config, nofits = nofits, sav = sav)
+            if code lt 0 then continue
+        endif
     endelse
     message, '******** AIA DOWNLOAD/CUTOFF performed in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info
     
