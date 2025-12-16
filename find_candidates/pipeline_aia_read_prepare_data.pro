@@ -7,11 +7,16 @@ return, {date_obs:index.date_obs, t_obs:index.t_obs, WAVELNTH:index.WAVELNTH $
 
 end
 
-pro pipeline_aia_read_prepare_data, files_in_arr, run_diff, data_full, index, presets
+pro pipeline_aia_read_prepare_data, files_in_arr, run_diff, data_full, index, presets, mmeds, meds, factors, transform = transform
 
 ;reading AIA files
 message,'Reading data...',/info
 read_sdo_silent, files_in_arr, ind_seq, data_full, /silent, /use_shared, /hide
+
+if n_elements(transform) ne 0 then begin
+    data_full = pipeline_aia_rotate_data(data_full, transform)
+endif
+
 n_files = n_elements(files_in_arr)
 ind0 = l_pipeline_aia_find_candidates_index(ind_seq[0])
 index = replicate(ind0, n_files)
@@ -26,13 +31,14 @@ meds = dblarr(n_files)
 for i = 0, n_files-1 do begin
     index[i] = l_pipeline_aia_find_candidates_index(ind_seq[i])
 ;    exps[i] = ind_seq[i].exptime
-    data_full[*, *, i] = median(data_full[*, *, i], presets.aia_median)
+    if presets.aia_median gt 1 then data_full[*, *, i] = median(data_full[*, *, i], presets.aia_median)
 ;    data_full[*, *, i] = CONVOL(data_full[*, *, i], kernel)
     meds[i] = median(data_full[*, *, i])
 endfor
 ;medexp = median(exps)
 mmeds = median(meds)
 
+factors = dblarr(n_files)
 ;sz = size(data_full)
 ;data_exp = dblarr(sz[1], sz[2], sz[3])
 ;data_med = dblarr(sz[1], sz[2], sz[3])
@@ -42,8 +48,10 @@ dmax = 1d + presets.median_lim
 dmin = 1d/dmax
 for i = 0, n_files-1 do begin
 ;    data_exp[*,*,i] = data_full[*,*,i]/exps[i]*medexp
+    factors[i] = 1
     if meds[i]/mmeds ge dmin && mmeds/meds[i] le dmax then begin
-        data_full[*,*,i] = data_full[*,*,i]/meds[i]*mmeds
+        factors[i] = mmeds/meds[i]
+        data_full[*,*,i] = data_full[*,*,i] * factors[i]
 ;        if i gt 0 then begin
 ;            xc = total(data_full[*,*,i])
 ;            xp = total(data_full[*,*,i-1])

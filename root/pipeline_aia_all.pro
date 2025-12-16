@@ -1,6 +1,7 @@
 function pipeline_aia_all, config_file, work_dir $
                     , fps = fps, no_load = no_load, no_cut = no_cut $
                     , no_save_empty = no_save_empty $
+                    , output_data = output_data $
                     , no_visual = no_visual, no_vis_hmi = no_vis_hmi, no_cand = no_cand, no_details = no_details $
                     , presets_file = presets_file, ref_images = ref_images $
                     , remote_cutout = remote_cutout, cache_dir = cache_dir $
@@ -42,6 +43,7 @@ asu_json_save_list, presets, work_dir + path_sep() + obj_dir + path_sep() + 'pre
 
 foreach wave, config.waves, i do begin
     t0 = systime(/seconds)
+    transform = !NULL
     if keyword_set(remote_cutout) then begin
         if ~keyword_set(no_load) then begin
             save_dir = work_dir + path_sep() + aia_dir_wave_sel[i]
@@ -50,7 +52,7 @@ foreach wave, config.waves, i do begin
                 file_mkdir, save_dir_full
                 pipeline_aia_download_aia_full_selected, wave, save_dir_full, config
             endif
-            lims = aia_utils_download_cutout(wave, save_dir, config)
+            lims = aia_utils_download_cutout(wave, save_dir, config, transform = transform)
         endif
     endif else begin
         if ~keyword_set(no_load) then begin
@@ -71,7 +73,7 @@ foreach wave, config.waves, i do begin
         case method of
             0: ncand = pipeline_aia_find_candidates_m0(work_dir, aia_dir_wave_sel[i], wave, obj_dir, config, files_in, presets)
             1: ncand = pipeline_aia_find_candidates(work_dir, aia_dir_wave_sel[i], wave, obj_dir, config, files_in, presets)
-            2: ncand = pipeline_aia_find_candidates_m2(work_dir, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand)
+            2: ncand = pipeline_aia_find_candidates_m2(work_dir, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand, output_data = output_data, transform = transform)
         endcase
         cand_report.Add, {wave:wave, ncand:ncand}
         if ~keyword_set(no_visual) then begin   

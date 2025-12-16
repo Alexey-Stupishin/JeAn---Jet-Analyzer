@@ -1,10 +1,16 @@
-function pipeline_aia_find_candidates_m2, work_dir, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand
+function pipeline_aia_find_candidates_m2, work_dir, wave, obj_dir, config, files_in, presets, run_diff, data, ind_seq, no_cand = no_cand, output_data = output_data, transform = transform
 
 t0 = systime(/seconds)
 
 if files_in.Count() eq 0 then return, 0
 
-pipeline_aia_read_prepare_data, files_in.ToArray(), rd_proc, data, ind_seq, presets
+pipeline_aia_read_prepare_data, files_in.ToArray(), rd_proc, data, ind_seq, presets, mmeds, meds, factors, transform = transform
+
+if n_elements(output_data) ne 0 then begin
+    fname = work_dir + path_sep() + obj_dir + path_sep() + 'process_data_' + strcompress(fix(wave),/remove_all) + '.sav'
+    save, filename = fname, data, rd_proc, mmeds, meds, factors
+endif
+
 run_diff = rd_proc
 
 szd = size(data)
