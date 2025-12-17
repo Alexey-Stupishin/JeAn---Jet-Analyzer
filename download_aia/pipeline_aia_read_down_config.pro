@@ -1,4 +1,5 @@
 pro pipeline_aia_read_down_config, config, method, config_file = config_file, waves = waves, warc = warc, harc = harc
+compile_opt idl2
 
 if not keyword_set(config_file) then config_file = "config.json"
 
@@ -19,7 +20,7 @@ config = {tstart:config_data["TIME_START"], tstop:config_data["TIME_STOP"], tref
         , mag:list() $
         , method:method $
         , timeout:3, count:3, limit:30, timeout_post:5, count_post:3 $
-        , arcpix_aia:arcppix_aia, rotate:0, rot_angle:0}
+        , arcpix_aia:arcppix_aia, rotate:0, rot_angle:0d}
 
 config.waves = asu_get_safe_json_key(config_data, "WAVES", list())
 if n_elements(waves) ne 0 then begin
@@ -58,5 +59,8 @@ config.rot_angle = 0
 if config.rotate gt 0 then begin
     config.rot_angle = asu_ratan_position_angle_by_date(azimuth, config.tstart)
 endif
+
+config.rot_angle = -10
+
 
 end
