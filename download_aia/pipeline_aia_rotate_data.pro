@@ -35,14 +35,14 @@ coords[*,1] = l_pipeline_aia_rotate_data_coords(coords[*,1], trans)
 coords[*,2] = l_pipeline_aia_rotate_data_coords(coords[*,2], trans)
 coords[*,3] = l_pipeline_aia_rotate_data_coords(coords[*,3], trans)
 
-xleft = ceil(max([coords[0,0], coords[0,3]]))
-xright = floor(min([coords[0,1], coords[0,2]]))
-ybottom = ceil(max([coords[1,2], coords[1,3]]))
-ytop = floor(min([coords[1,0], coords[1,1]]))
+xleft = ceil(min([coords[0,0], coords[0,3]]))
+xright = floor(max([coords[0,1], coords[0,2]]))
+ybottom = ceil(min([coords[1,2], coords[1,3]]))
+ytop = floor(max([coords[1,0], coords[1,1]]))
 
 cut = dblarr(xright-xleft+1, ytop-ybottom+1, sz[3])
 for k = 0, sz[3]-1 do begin
-    remap = interp2d(data_full[*,*,k], xp, yp, trans.xt, trans.yt, missing = 255)
+    remap = interp2d(data_full[*,*,k], xp, yp, trans.xt, trans.yt, missing = 0)
     ; tvplot, remap, /aspect_ratio
     cut[*,*,k] = remap[xleft:xright, ybottom:ytop]
 endfor

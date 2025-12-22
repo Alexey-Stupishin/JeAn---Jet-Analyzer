@@ -29,8 +29,8 @@ for i = 0, candlist.Count()-1 do begin
         endif
         tend = aiaseq[pos].date_obs
         pend = pos
-        xarc = ([min(clust.x), max(clust.x)] - aiaseq[pos].CRPIX1)*aiaseq[pos].CDELT1 + aiaseq[pos].CRVAL1 
-        yarc = ([min(clust.y), max(clust.y)] - aiaseq[pos].CRPIX2)*aiaseq[pos].CDELT2 + aiaseq[pos].CRVAL2 
+        asu_fits_pixels2arcsec_x, [min(clust.x), max(clust.x)], aiaseq[pos], xarc
+        asu_fits_pixels2arcsec_y, [min(clust.y), max(clust.y)], aiaseq[pos], yarc
         if xbox eq !NULL then begin
             xbox = xarc
             ybox = yarc

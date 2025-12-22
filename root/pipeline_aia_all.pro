@@ -100,7 +100,7 @@ foreach mag, config.mag, i do begin
         t0 = systime(/seconds)
         pipeline_aia_get_input_files, config, work_dir + path_sep() + hmi_dir_wave_sel[i], files_in
         if files_in.Count() eq 0 then begin
-            asu_cond_message, throw_error_hmi, message, '!!!!!!!!  NO HMI FILES DOWNLOADED'
+            asu_cond_message, throw_error_hmi, '!!!!!!!!  NO HMI FILES DOWNLOADED'
         endif else begin    
             n_files = pipeline_aia_movie_hmi(work_dir, obj_dir, vis_data_dir, mag, files_in, hmi_vis_data_dir_wave[i], config, fps = fps)
             message, '******** HMI PICTURES/VIDEO prepared in ' + asu_sec2hms(systime(/seconds)-t0, /issecs), /info

@@ -1,9 +1,17 @@
-function l_pipeline_aia_find_candidates_index, index
+function l_pipeline_aia_find_candidates_index, index, transform
 
-return, {date_obs:index.date_obs, t_obs:index.t_obs, WAVELNTH:index.WAVELNTH $
+s = {date_obs:index.date_obs, t_obs:index.t_obs, WAVELNTH:index.WAVELNTH $
          , naxis1:index.naxis1, naxis2:index.naxis2 $
          , CRPIX1:index.CRPIX1, CRPIX2:index.CRPIX2, CDELT1:index.CDELT1, CDELT2:index.CDELT2, CRVAL1:index.CRVAL1, CRVAL2:index.CRVAL2 $
-         , exptime:index.exptime}
+         , exptime:index.exptime, angle:0d, rcos:1d, rsin:0d}
+
+if transform ne !NULL then begin
+    s.angle = transform.angle
+    s.rcos = transform.cs
+    s.rsin = transform.ss
+endif 
+
+return, s
 
 end
 
@@ -15,10 +23,12 @@ read_sdo_silent, files_in_arr, ind_seq, data_full, /silent, /use_shared, /hide
 
 if n_elements(transform) ne 0 then begin
     data_full = pipeline_aia_rotate_data(data_full, transform)
-endif
+endif else begin
+    transform = !NULL
+endelse
 
 n_files = n_elements(files_in_arr)
-ind0 = l_pipeline_aia_find_candidates_index(ind_seq[0])
+ind0 = l_pipeline_aia_find_candidates_index(ind_seq[0], transform)
 index = replicate(ind0, n_files)
 ;normalizing exposure
 data_full = double(data_full > 1); change to double if necessary

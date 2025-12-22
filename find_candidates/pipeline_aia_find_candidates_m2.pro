@@ -8,7 +8,7 @@ pipeline_aia_read_prepare_data, files_in.ToArray(), rd_proc, data, ind_seq, pres
 
 if n_elements(output_data) ne 0 then begin
     fname = work_dir + path_sep() + obj_dir + path_sep() + 'process_data_' + strcompress(fix(wave),/remove_all) + '.sav'
-    save, filename = fname, data, rd_proc, mmeds, meds, factors
+    save, filename = fname, data, ind_seq, rd_proc, mmeds, meds, factors
 endif
 
 run_diff = rd_proc
@@ -89,7 +89,7 @@ message,strcompress(n_candidates)+" candidates initially ",/info
 ;if presets.debug then save, filename = prefix + '_debug.sav', cmask_erode, cmask_border; rd_proc, rd_check, cmask0, result ; , clust3d, data, ind_seq
 
 t0 = systime(/seconds)
-found_candidates = pipeline_aia_irc_filter_clusters_proc_all(clust3d, presets, rd_check)
+found_candidates = pipeline_aia_irc_filter_clusters_proc_all(clust3d, data, ind_seq, presets, rd_check)
 message, ' filtering ' + asu_sec2hms(systime(/seconds)-t0, /issecs) + ', found ' + strcompress(found_candidates.Count()), /info
 
 ;t0 = systime(/seconds)

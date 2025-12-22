@@ -43,7 +43,8 @@ if graphtype eq 0 then begin
     win = window(dimensions = windim)
     pipeline_aia_get_colormaps, wave, aia_lim, cm_aia, rdf_lim, cm_run_diff
     graphtype = 0
-endif else begin    
+endif else begin
+    prev_device = !d.name
     ;Use Z-buffer for generating plots
     set_plot,'Z'
     device,set_resolution = windim, set_pixel_depth = 24, decomposed =0
@@ -218,6 +219,7 @@ for k = 0, n_elements(found_candidates)-1 do begin
     endfor
 
     if graphtype eq 0 and win ne !NULL then win.Close
+    if graphtype ne 0 then set_plot, prev_device 
     
     detdir = work_dir + path_sep() + vis_data_dir_wave + path_sep() + details[k]
     filename = work_dir + path_sep() + vis_data_dir + path_sep() + prefix + '_' + strcompress(long(wave),/remove_all) + '_' + details[k] + '.mp4'

@@ -1,9 +1,10 @@
-function pipeline_aia_irc_filter_clusters_get_features_frame, pos, card, x, y, vbeta, aspect, baspect, waspect, rotx, roty, clust, speed
-    frame = {pos:pos, card:card, x:x, y:y, beta:vbeta, aspect:aspect, baspect:baspect, waspect:waspect, rotx:rotx, roty:roty, clust:clust, speed:speed}
+function pipeline_aia_irc_filter_clusters_get_features_frame, pos, datetime, sec_from_start, card, x, y, vbeta, aspect, baspect, waspect, rotx, roty, clust, speed, flux, xarc, yarc
+    frame = {pos:pos, datetime:datetime, sec_from_start:sec_from_start, card:card, x:x, y:y, beta:vbeta, aspect:aspect, baspect:baspect, waspect:waspect $
+           , rotx:rotx, roty:roty, clust:clust, speed:speed, flux:flux, xarc:xarc, yarc:yarc}
     return, frame
 end
 
-function pipeline_aia_irc_filter_clusters_get_features, clust, k, presets, rd_check
+function pipeline_aia_irc_filter_clusters_get_features, clust, data, ind_seq, k, presets, rd_check
 
 features = {clust_n:k, pos: 0L, length:0L, total_card:0L, max_card:0L, total_asp:0d, max_asp:0d, max_basp:0d, max_wasp:0d, total_wasp:0d $
           , total_speed:0d, max_speed:0d, av_speed:0d, med_speed:0d, from_start_speed:0d, total_lng:0d, av_width:0d, frames:list(), quartiles:[0d, 0d, 0d]}
@@ -40,6 +41,9 @@ for f = mi, ma do begin
     totcard += count
 endfor
     
+sz = size(data)
+cent_pix = (sz[1:2]+1)/2d
+    
 prevx = !NULL
 prevy = !NULL
 prevf = !NULL
@@ -49,8 +53,11 @@ sigma = dblarr(totcard);
 sigpos = 0
 xsc0 = !NULL
 ys0 = !NULL
+t_start = anytim(ind_seq[0].date_obs)
 for f = mi, ma do begin
-    frame = pipeline_aia_irc_filter_clusters_get_features_frame(f, 0, 0L, 0L, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d)
+    datetime = ind_seq[f].date_obs
+    sec_from_start = anytim(datetime) - t_start
+    frame = pipeline_aia_irc_filter_clusters_get_features_frame(f, datetime, sec_from_start, 0L, 0L, 0L, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d)
     c = clust[*, *, f]
     cmask = where(c eq k, count)
     if count gt 0 then begin
@@ -90,7 +97,20 @@ for f = mi, ma do begin
         prevy = y
         prevf = f
         
-        frame = pipeline_aia_irc_filter_clusters_get_features_frame(f, n_elements(x), x, y, vbeta, caspect, baspect, waspect, rotx, roty, k, speed)
+        d_cm_x = mean(x) - cent_pix[0]
+        d_cm_y = mean(y) - cent_pix[1]
+        xcorr =  d_cm_x*ind_seq[f].rcos + d_cm_y*ind_seq[f].rsin + cent_pix[0] 
+        ycorr = -d_cm_x*ind_seq[f].rsin + d_cm_y*ind_seq[f].rcos + cent_pix[1]
+        asu_fits_pixels2arcsec_x, xcorr, ind_seq[f], xarc
+        asu_fits_pixels2arcsec_y, ycorr, ind_seq[f], yarc
+        
+        ; calc flux from data
+        flux = 0
+        for p = 0, n_elements(x)-1 do begin
+            flux += data[x(p), y(p), f]
+        endfor
+                
+        frame = pipeline_aia_irc_filter_clusters_get_features_frame(f, datetime, sec_from_start, n_elements(x), x, y, vbeta, caspect, baspect, waspect, rotx, roty, k, speed, flux, xarc, yarc)
     endif
     features.frames.Add, frame
 endfor
